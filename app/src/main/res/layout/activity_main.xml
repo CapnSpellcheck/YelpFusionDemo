@@ -18,5 +18,16 @@
          app:layoutManager="com.letstwinkle.yelpfusiondemo.GridAutofitLayoutManager"
          android:columnWidth="@dimen/gridColumnWidth"
          />
+      <ProgressBar
+         android:id="@+id/loadingProgress"
+         style="@android:style/Widget.DeviceDefault.ProgressBar.Large"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_gravity="center"
+         android:indeterminate="true"
+         android:indeterminateOnly="true"
+         android:background="@android:color/transparent"
+         android:visibility="gone"
+         />
    </FrameLayout>
 </layout>

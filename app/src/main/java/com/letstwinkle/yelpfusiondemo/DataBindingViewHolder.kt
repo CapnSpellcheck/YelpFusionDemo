@@ -15,4 +15,8 @@ class DataBindingViewHolder : RecyclerView.ViewHolder {
         this.binding = binding
     }
 
+    // this is used for the Loading cell, it just doesn't have a binding.
+    constructor(itemView: View) : super(itemView) {
+        binding  = null
+    }
 }

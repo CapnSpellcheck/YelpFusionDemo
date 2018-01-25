@@ -15,17 +15,20 @@
       >
 
       <ImageView
-         android:layout_width="match_parent" android:layout_height="wrap_content"
+         android:layout_width="match_parent"
+         android:layout_height="220dp"
          android:scaleType="centerCrop"
          android:adjustViewBounds="true"
          app:srcUri="@{business.mainImageURL}"
          android:contentDescription="image of business"
          />
       <TextView
-         android:layout_width="match_parent" android:layout_height="wrap_content"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
          android:layout_marginTop="10dp"
          android:text="@{business.name}"
          android:textAlignment="center"
+         android:textAppearance="?android:textAppearanceMedium"
          />
 
    </LinearLayout>

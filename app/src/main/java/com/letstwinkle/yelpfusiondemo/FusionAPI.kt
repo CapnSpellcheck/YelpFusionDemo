@@ -3,8 +3,7 @@ package com.letstwinkle.yelpfusiondemo
 import android.net.Uri
 import com.android.volley.Request
 import com.android.volley.VolleyError
-import com.beust.klaxon.JsonObject
-import com.beust.klaxon.array
+import com.beust.klaxon.*
 
 object FusionAPI {
     const val tag = "FusionAPI"
@@ -54,9 +53,10 @@ private class SearchResponseAdapter(rh: ResponseHandler<SearchResponse>, val off
     override fun adapt(obj: JsonObject): SearchResponse {
         val businessArray: List<JsonObject>? = obj.array("businesses")
         val businesses = businessArray?.map { obj -> Business(obj) } ?: emptyList()
+        val total = obj.int("total") ?: 0
 
-        return SearchResponse(offset, businesses)
+        return SearchResponse(offset, total, businesses)
     }
 }
 
-data class SearchResponse(val offset: Int, val entries: List<Business>)
+data class SearchResponse(val offset: Int, val total: Int, val entries: List<Business>)
