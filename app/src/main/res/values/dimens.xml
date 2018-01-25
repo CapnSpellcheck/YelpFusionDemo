@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+   <dimen name="activityHorizontalMargin">16dp</dimen>
+   <dimen name="gridColumnWidth">149dp</dimen>
+   <dimen name="gridColumnPadding">8dp</dimen>
+</resources>

@@ -1,0 +1,5 @@
+<resources>
+   <string name="app_name">YelpFusionDemo</string>
+   <string name="error_dlog_title">Error</string>
+   <string name="error_dlog_body">Oh, the humanity! An ERROR occurred!</string>
+</resources>
