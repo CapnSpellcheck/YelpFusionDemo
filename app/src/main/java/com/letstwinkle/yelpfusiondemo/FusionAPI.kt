@@ -15,11 +15,7 @@ object FusionAPI {
         val params = arrayMapOf("term" to query, "location" to location, "offset" to offset)
         val url = buildURL("/businesses/search", params)
         val req = KlaxonRequest(Request.Method.GET, url, SearchResponseAdapter(handler, offset))
-
-        // the Yelp api doesn't return back the offset from the request, which is bad, so I had to
-        // hack in a note on the request. It is theoretically of use, though I may not use it for
-        // this simple spec.
-//        req.intNote = offset
+        
         MyApp.instance.requestQueue.add(req)
         return req
     }
