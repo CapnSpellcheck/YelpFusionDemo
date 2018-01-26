@@ -29,8 +29,5 @@ There is a style mismatch in the search history list on API 25 and up (or maybe 
 On 23 and below, the style matches the action bar -- light text on dark background. On 25, for some
 reason it uses a light background. I haven't had the time to investigate.
 
-The query string isn't displayed in the search box after clicking on a history entry. I think this
-is a pretty weird design of SearchView.
-
 The first time you tap on a grid item after entering the search query, the keyboard can pop up again.
 The Android input focus system has its surprising moments.
