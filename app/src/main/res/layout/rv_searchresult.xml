@@ -3,33 +3,42 @@
         xmlns:app="http://schemas.android.com/apk/res-auto">
    <data>
       <variable name="business" type="com.letstwinkle.yelpfusiondemo.Business" />
+      <variable name="actions" type="com.letstwinkle.yelpfusiondemo.SearchResultActions" />
    </data>
 
-   <LinearLayout
-      android:orientation="vertical"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginBottom="30dp"
-      android:paddingLeft="8dp"
-      android:paddingRight="8dp"
+   <!-- FrameLayout to leverage the foreground -->
+   <FrameLayout
+      android:layout_width="match_parent" android:layout_height="wrap_content"
+      android:foreground="?android:attr/selectableItemBackground"
+      android:onClick="@{() -> actions.businessClicked(business) }"
       >
 
-      <ImageView
-         android:layout_width="match_parent"
-         android:layout_height="220dp"
-         android:scaleType="centerCrop"
-         android:adjustViewBounds="true"
-         app:srcUri="@{business.mainImageURL}"
-         android:contentDescription="image of business"
-         />
-      <TextView
+      <LinearLayout
+         android:orientation="vertical"
          android:layout_width="match_parent"
          android:layout_height="wrap_content"
-         android:layout_marginTop="10dp"
-         android:text="@{business.name}"
-         android:textAlignment="center"
-         android:textAppearance="?android:textAppearanceMedium"
-         />
+         android:layout_marginBottom="30dp"
+         android:paddingLeft="8dp"
+         android:paddingRight="8dp"
+         >
 
-   </LinearLayout>
+         <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
+            app:srcUri="@{business.mainImageURL}"
+            android:contentDescription="image of business"
+            />
+         <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@{business.name}"
+            android:textAlignment="center"
+            android:textAppearance="?android:textAppearanceMedium"
+            />
+
+      </LinearLayout>
+   </FrameLayout>
 </layout>

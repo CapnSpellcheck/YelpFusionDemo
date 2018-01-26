@@ -13,7 +13,8 @@
       android:supportsRtl="true"
       android:theme="@style/AppTheme">
 
-      <activity android:name=".MainActivity" android:launchMode="singleTop">
+      <activity android:name=".MainActivity" android:launchMode="singleTop"
+         android:label="">
          <intent-filter>
             <action android:name="android.intent.action.MAIN"/>
             <category android:name="android.intent.category.LAUNCHER"/>
@@ -28,7 +29,7 @@
       <provider
          android:authorities="com.letstwinkle.yelpfusiondemo.RecentSearches"
          android:name=".RecentSearchProvider"
-         />
+         android:exported="false"/>
    </application>
 
 </manifest>

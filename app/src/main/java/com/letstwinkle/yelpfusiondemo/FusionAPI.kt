@@ -7,6 +7,7 @@ import com.beust.klaxon.*
 
 object FusionAPI {
     const val tag = "FusionAPI"
+    const val MAX_RESULTS = 1000
 
     fun getBusinesses(query: String, location: String, offset: Int,
                       handler: ResponseHandler<SearchResponse>): KlaxonRequest

@@ -2,20 +2,26 @@ package com.letstwinkle.yelpfusiondemo
 
 import android.app.Activity
 import android.app.SearchManager
-import android.content.*
+import android.content.Context
+import android.content.Intent
 import android.content.SearchRecentSuggestionsProvider.DATABASE_MODE_QUERIES
+import android.graphics.Point
 import android.os.Bundle
 import android.provider.SearchRecentSuggestions
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.*
-import android.widget.ProgressBar
+import android.widget.ImageView
 import android.widget.SearchView
 import com.android.volley.VolleyError
 import com.letstwinkle.yelpfusiondemo.databinding.RvSearchresultBinding
+import com.nostra13.universalimageloader.core.DisplayImageOptions
+import com.nostra13.universalimageloader.core.ImageLoader
 
+private const val tag_ = "MainActivity"
 
-class MainActivity : Activity() {
+class MainActivity : Activity(), SearchResultActions {
     lateinit var resultsGrid: RecyclerView
     var currentQuery: String = ""
     var totalResults: Int = 0
@@ -41,17 +47,13 @@ class MainActivity : Activity() {
         }
 
         scrollListener = RVScrollToBottomListener(resultsGrid.layoutManager, getAdapter()) {
-            if (getAdapter().itemCount < totalResults) {
+            val currentCount = getAdapter().itemCount
+            if (currentCount < totalResults && currentCount < FusionAPI.MAX_RESULTS) {
                 loadMore()
                 true
             } else false
         }
         resultsGrid.addOnScrollListener(scrollListener)
-    }
-
-    override fun onStart() {
-        super.onStart()
-
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -70,6 +72,33 @@ class MainActivity : Activity() {
         return true
     }
 
+    // show the biz photo in a lightbox-ish thing. basically just a dialog.
+    override fun businessClicked(biz: Business) {
+        // utilize the custom view of the dialog. Create an ImageView from scratch real quick.
+        val iv = ImageView(this)
+        val screenSize = Point()
+        this.windowManager.defaultDisplay.getSize(screenSize)
+        // I tried constraining the ImageView size further, but it doesn't work due to the way
+        // dialogs render -- some deeper digging would be necessary
+//        iv.maxWidth = convertDpToPixel(screenSize.x - 80f, this).toInt()
+//        iv.minimumHeight = convertDpToPixel(0.5f*screenSize.y, this).toInt()
+//        iv.maxHeight = convertDpToPixel(screenSize.y - 150f, this).toInt()
+        iv.adjustViewBounds = true
+        iv.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                                                 ViewGroup.LayoutParams.WRAP_CONTENT)
+        ImageLoader.getInstance().displayImage(biz.mainImageURL, iv, MyApp.instance.displayImageOpts)
+
+        val dfrag = SimpleDialogFragment()
+        dfrag.vieww = iv
+
+        dfrag.show(this.fragmentManager, "bizphoto")
+
+        // if Image is clicked, just close it - so tapping anywhere on screen closes.
+        iv.setOnClickListener {
+            dfrag.dismiss()
+        }
+    }
+
     private fun startSearch() {
         val suggestions = SearchRecentSuggestions(this, RecentSearchProvider.AUTHORITY, DATABASE_MODE_QUERIES)
         suggestions.saveRecentQuery(currentQuery, null)
@@ -81,12 +110,12 @@ class MainActivity : Activity() {
 
     private val responseHandler = object : ResponseHandler<SearchResponse> {
         override fun onResponse(response: SearchResponse) {
+            Log.d(tag_, "Total results: ${response.total}")
             // we have a new total results count, so update it
             totalResults = response.total
-            val progressBar: View = findViewById(R.id.loadingProgress)
-            progressBar.visibility = View.GONE
             getAdapter().append(response.entries)
             scrollListener.loadingFinished()
+            finishRegardless()
         }
 
         override fun onErrorResponse(error: VolleyError) {
@@ -94,7 +123,13 @@ class MainActivity : Activity() {
             dfrag.title = R.string.error_dlog_title
             dfrag.message = R.string.error_dlog_body
             dfrag.showAllowingStateLoss(this@MainActivity.fragmentManager, "error")
+            finishRegardless()
+        }
+
+        fun finishRegardless() {
             scrollListener.loadingFinished()
+            val progressBar: View = findViewById(R.id.loadingProgress)
+            progressBar.visibility = View.GONE
         }
     }
 
@@ -104,7 +139,7 @@ class MainActivity : Activity() {
         FusionAPI.getBusinesses(currentQuery, "10001", offset, responseHandler)
     }
 
-    class SearchAdapter : LoadingCellCapableRVAdapter() {
+    inner class SearchAdapter : LoadingCellCapableRVAdapter() {
         private val results: MutableList<Business> = mutableListOf()
 
         fun removeAll() {
@@ -121,6 +156,7 @@ class MainActivity : Activity() {
 
         override fun onMyCreateViewHolder(parent: ViewGroup, viewType: Int): DataBindingViewHolder {
             val binding = RvSearchresultBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            binding.actions = this@MainActivity
             return DataBindingViewHolder(binding)
         }
 
@@ -129,6 +165,6 @@ class MainActivity : Activity() {
             binding.business = results[position]
         }
 
-        override fun getItemCount(): Int = results.size
+        override fun getItemCount(): Int = results.size + if (this.loading) 1 else 0
     }
 }
