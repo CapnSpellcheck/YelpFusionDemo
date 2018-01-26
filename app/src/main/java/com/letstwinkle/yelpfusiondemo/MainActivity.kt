@@ -26,6 +26,7 @@ class MainActivity : Activity(), SearchResultActions {
     var currentQuery: String = ""
     var totalResults: Int = 0
     lateinit var scrollListener: RVScrollToBottomListener
+    lateinit var searchView: SearchView
 
     inline fun getAdapter(): SearchAdapter = resultsGrid.adapter as SearchAdapter
 
@@ -67,7 +68,8 @@ class MainActivity : Activity(), SearchResultActions {
         this.menuInflater.inflate(R.menu.menu_main, menu)
         // Associate searchable configuration with the SearchView
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        val searchView = menu.findItem(R.id.search).actionView as SearchView
+        // it seems surprisingly difficult to locate the SearchView in the action bar later…
+        searchView = menu.findItem(R.id.search).actionView as SearchView
         searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
         return true
     }
@@ -102,6 +104,10 @@ class MainActivity : Activity(), SearchResultActions {
     private fun startSearch() {
         val suggestions = SearchRecentSuggestions(this, RecentSearchProvider.AUTHORITY, DATABASE_MODE_QUERIES)
         suggestions.saveRecentQuery(currentQuery, null)
+        // it would be nice to only set the query if it was selected from the history, but it seems like
+        // the simplest way to do that is to use OnSuggestionListener. I could hook that up, but I think
+        // I'm at the point of "being done".
+        searchView.setQuery(currentQuery, false)
         getAdapter().removeAll()
         loadMore()
         val progressBar: View = findViewById(R.id.loadingProgress)
