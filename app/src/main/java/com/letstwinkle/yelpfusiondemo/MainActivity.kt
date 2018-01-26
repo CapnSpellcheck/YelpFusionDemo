@@ -105,9 +105,9 @@ class MainActivity : Activity(), SearchResultActions {
         val suggestions = SearchRecentSuggestions(this, RecentSearchProvider.AUTHORITY, DATABASE_MODE_QUERIES)
         suggestions.saveRecentQuery(currentQuery, null)
         // it would be nice to only set the query if it was selected from the history, but it seems like
-        // the simplest way to do that is to use OnSuggestionListener. I could hook that up, but I think
-        // I'm at the point of "being done".
-        searchView.setQuery(currentQuery, false)
+        // the simplest way to do that is to use OnSuggestionListener. I could hook that up, but
+        // I'm at the point of "being done". Anyway, when you setQuery, the suggestion list seems to pop up.
+//        searchView.setQuery(currentQuery, false)
         getAdapter().removeAll()
         loadMore()
         val progressBar: View = findViewById(R.id.loadingProgress)

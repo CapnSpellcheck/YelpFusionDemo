@@ -31,3 +31,7 @@ reason it uses a light background. I haven't had the time to investigate.
 
 The first time you tap on a grid item after entering the search query, the keyboard can pop up again.
 The Android input focus system has its surprising moments.
+
+I felt like it was annoying that the SearchView was blank after tapping a suggestion, so I set the
+query after getting a search. Guess what, upon setting it, the suggestion UI pops up. So I commented
+that out. Annoying little bugger. I could continue to play with it, but "I've spent enough time."
