@@ -120,7 +120,6 @@ class MainActivity : Activity(), SearchResultActions {
             // we have a new total results count, so update it
             totalResults = response.total
             getAdapter().append(response.entries)
-            scrollListener.loadingFinished()
             finishRegardless()
         }
 
